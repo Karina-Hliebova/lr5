@@ -17,136 +17,145 @@ void task_2(); //завдання 2, декларація функції
 void task_3(); // завдання 3, декларація функції
 
 int main() {
-  SetConsoleOutputCP(1251);
-  int menu; // зміна для номеру завдання
-  do
-  { // початок циклу
-    cin >> menu; // обирання номеру завдання
-    switch (menu) {
-    case 1: task_1(); break; // 1 - завдання 1
-    case 2: task_2(); break; // 2 - завдання 2
-    case 3: task_3(); break; // 3 - завдання 3
-    case -1: cout << "Вихід..." << endl; break; // -1 - вихід
-    default: cout << "Помилка! Введіть інший номер!" << endl; // інший номер - повторити
-    }
-  } // кінець циклу
-  while (menu != -1); // умова виконання циклу
-  return 0;
+    SetConsoleOutputCP(1251);
+    int menu; // зміна для номеру завдання
+    do
+    { // початок циклу
+        cout << "Номер завдання:"; //введення номеру завдання
+        cin >> menu; // обирання номеру завдання
+        cout << endl; //вільна строка
+        switch (menu) {
+        case 1: task_1(); break; // 1 - завдання 1
+        case 2: task_2(); break; // 2 - завдання 2
+        case 3: task_3(); break; // 3 - завдання 3
+        case -1: cout << "Вихід..." << endl; break; // -1 - вихід
+        default: cout << "Помилка! Лише 1, 2 або 3!" << endl; // інший номер - повторити
+        }
+        cout << endl;
+    } // кінець циклу
+    while (menu != -1); // умова виконання циклу
+    return 0;
 }
 
-void task_1() { // завдання 1, реалізація
-  double x, y, r;
-  float cath_small_yell_tris = r / 4; // знаходимо відрізок жовтої частини кола
-  float dist_2_chord = r - cath_small_yell_tris; // обчислюємо відстань до хорди
+// функція перевірки входження точки в коло
+bool isInCircle(int x, int y, int r, float area_yellow) {
+    double distance = x * x + y * y;
+    return (distance <= r * r) || (x <= 0 && y >= 0 && distance <= area_yellow) || (x <= 0 && y <= 0 && distance <= r * r) || (x >= 0 && y <= 0 && distance <= r * r);
+}
 
-  // знаходимо площу повної хорди
-  // розкладаємо на зменшуване та від'ємник
-  double zmensh = r * r * acos(dist_2_chord / r);
-  double vdmk = dist_2_chord * sqrt(r * r - dist_2_chord * dist_2_chord);
+void task_1() {
+    double r;
+    int n;
 
-  double S_chord = zmensh - vdmk;
+    cout << "Введіть радіус кола: "; // введення радіуса
+    cin >> r;
 
-  double area_yellow = S_chord / 2; // знаходимо площу жовтої частини на колі
+    cout << "Введіть кількість точок: "; // введення кількості точок
+    cin >> n;
 
-  bool isInCircle(); { // функція перевірки входження точки в коло
-    (x >= 0 && y >= 0 && (x * x + y * y <= r * r))  ((x <= 0 && y >= 0 && (x * x + y * y <= r * r)) &&
-    (x * x + y * y <= area_yellow))  (x <= 0 && y <= 0 && (x * x + y * y <= r * r))  (x >= 0 && y <= 0 && '\n'
-    <= r * r);                                                                                                
-  }
+    // знаходимо відрізок жовтої частини кола
+    float cath_small_yell_tris = r / 4;
+    float dist_2_chord = r - cath_small_yell_tris;
 
-  int n; // кількість точок
-  cout << "Введіть радіус кола: "; // введення радіуса
-  cin >> r;
-  cout << "Введіть кількість точок: "; // введення кількості точок
-  cin >> n; 
+    // знаходимо площу повної хорди
+    double zmensh = r * r * acos(dist_2_chord / r);
+    double vdmk = dist_2_chord * sqrt(r * r - dist_2_chord * dist_2_chord);
 
-  int count = 0; // лічильник точок у червоній фігурі
+    double S_chord = zmensh - vdmk;
+    double area_yellow = S_chord / 2; // площа жовтої частини на колі
 
-  for (int i = 0; i < n; ++i) { // цикл 
-    double x, y;
-    cout << "Введіть координати точки: \n" << i + 1 << "(x, y): ";
-    cin >> x >> y;
+    int count = 0; // лічильник точок у червоній фігурі
 
-    if (isInCircle(x, y, r)) {
-      count++;
+    // цикл для введення точок
+    for (int i = 0; i < n; ++i) {
+        double x, y;
+        cout << "Введіть координати точки " << i + 1 << " (x, y): ";
+        cin >> x >> y;
+
+        if (isInCircle(x, y, r, area_yellow)) {
+            count++;
+        }
     }
-  }
-  cout << "Кількість точок в червоній області: " << count << endl;
+
+    cout << "Кількість точок у червоній області: " << count << endl;
 }
 
 
 void task_2() { // завдання 2, реалізація
-  double x;
-  int n;
-  
-  cout << "Введіть значення х: "; // введення числа х
-  cin >> x;
-  if (x < 0  x > 2) { //перевірка на кореутність
-    cout << "Помилка! х має бути в діапазоні [0; 2]." << endl; // сповіщення про помилку
-    return; 
-  }
-  cout << "Введіть натуральне число n: "; // введення числа n
-  cin >> n; 
-  if (n <= 0) { //перевірка на коренктність
-    cout << "Помилка! n має бути натуральним числом." << endl;
-    return;
-  }
+    double x;
+    int n;
 
-  double num = 1.0; // чисельник
-  double denom = 1.0; // знаменник
-
-  for (int i = 1; i <= n; i++) {
-    num *= (1 - i * x); // обчислення чисельника
-    denom *= (1 + 2 * i * x); // обчислення знаменника
-  }
-  double result = num / denom; // розрахунок виразу
-  cout << "Значення виразу: " << result << endl; // виведення результату
-
-  cout << "Елементи послідовності: " << endl; // виведення значень елементів
-  if (n % 2 == 0) {
-    for (int i = 3; i <= n; i += 3) {
-      cout << "Елемент" << i << ":" << (1 - i * x) << endl; // для парних виведення кожного третього елемента
+    cout << "Введіть значення х: "; // введення числа х
+    cin >> x;
+    if (x < 0 || x > 2) { //перевірка на коректність
+        cout << "Помилка! х має бути в діапазоні [0; 2]." << endl; // сповіщення про помилку
+        return;
     }
-  } 
-   else {
-    for (int i = 4; i <= n; i += 4) {
-      cout << "Елемент" << i << ": " << (1 - i * x) << endl; // для непарних виведення кожного четвертого елемента
+    cout << "Введіть натуральне число n: "; // введення числа n
+    cin >> n;
+    if (n <= 0) { //перевірка на коректність
+        cout << "Помилка! n має бути натуральним числом." << endl;
+        return;
     }
-   }
+
+    double num = 1.0; // чисельник
+    double denom = 1.0; // знаменник
+
+    for (int i = 1; i <= n; i++) {
+        num *= (1 - i * x); // обчислення чисельника
+        denom *= (1 + 2 * i * x); // обчислення знаменника
+    }
+    double result = num / denom; // розрахунок виразу
+    cout << "Значення виразу: " << result << endl; // виведення результату
+
+    cout << "Елементи послідовності: " << endl; // виведення значень елементів
+    if (n % 2 == 0) {
+        for (int i = 3; i <= n; i += 3) {
+            cout << "Елемент " << i << ": " << (1 - i * x) << endl; // для парних виведення кожного третього елемента
+        }
+    }
+    else {
+        for (int i = 4; i <= n; i += 4) {
+            cout << "Елемент " << i << ": " << (1 - i * x) << endl; // для непарних виведення кожного четвертого елемента
+        }
+    }
 }
 
 
-double term(int n) { // фунуція для обчислення n-го члена ряду
+double term(int n) { // функція для обчислення n-го члена ряду
     return (3.0 * n * tgamma(n + 1)) / pow(n, n);  // tgamma - факторіал
-  }
+}
 void task_3() { // завдання 2, реалізація
     const double e = 1e-10; // мала величина для збіжності
-  const double g = 1e5; // верхня межа для розбіжності ряду
-  const int M = 1000; // крок виводу результатів
-  const int maxIterations = 1000000; // максимальна кількість ітерацій
+    const double g = 1e5; // верхня межа для розбіжності ряду
+    const int M = 1000; // крок виводу результатів
+    const int maxIterations = 1000000; // максимальна кількість ітерацій
 
-  double sum = 0.0; //сума ряду
-  int n = 1; // початковий індекс
+    double sum = 0.0; //сума ряду
 
-  cout << fixed << setprecision(15); // форматування до 15 знаків після коми
-  cout << "Дослідження ряду на збіжність:\n\n"; 
+    int n;
+    cout << "Введіть початковий індекс n:"; // введення індекса
+    cin >> n;
 
-  while (n <= maxIterations) {
-    double currentTerm = term(n); // перевірка умов завершення
-    if (fabs(currentTerm) < e) {
-      cout << "Ряд збігається на " << n << "-й ітерації.\n";
-      break;
+    cout << fixed << setprecision(15); // форматування до 15 знаків після коми
+    cout << "Дослідження ряду на збіжність:\n\n";
+
+    while (n <= maxIterations) {
+        double currentTerm = term(n); // перевірка умов завершення
+        if (fabs(currentTerm) < e) {
+            cout << "Ряд збігається на " << n << "-й ітерації.\n";
+            break;
+        }
+        if (fabs(currentTerm) > g) {
+            cout << "Ряд розбігається на " << n << "-й ітерації.\n";
+            break;
+        }
+        sum += currentTerm; // додавання поточного члена до суми
+        if (n % M == 0) {
+            cout << "Ітерація" << n << ", поточна сума: " << sum << "\n"; //
+        }
+        n++;
     }
-    if (fabs(currentTerm) > g) {
-      cout << "Ряд розбігається на " << n << "-й ітерації.\n";
-      break;
-    }
-    sum += currentTerm; // додавання поточного члена до суми
-    if (n % M == 0) {
-      cout << "Ітерація" << n << ", поточна сума: " << sum << "\n"; //
-    }
-    n++;
-  }
-  cout << "\nКінцева сума ряду: " << sum << endl; // виведення остаточного результату
-  cout << "Кількість ітерацій: " << n << endl;
+    cout << "\nКінцева сума ряду: " << sum << endl; // виведення остаточного результату
+    cout << "Кількість ітерацій: " << n << endl;
 }
